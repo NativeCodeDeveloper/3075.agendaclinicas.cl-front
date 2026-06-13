@@ -15,7 +15,13 @@ import { cn } from "@/lib/utils";
 const CF_BASE = "https://imagedelivery.net/aCBUhLfqUcxA2yhIBn1fNQ";
 
 const fallbackSlides = [
-  { id: "fallback-1", image: "/logoagendaclinica.png", alt: "Centro Médico", titulo: "", descripcion: "" },
+  {
+    id: "fallback-1",
+    image: "/logo.png",
+    alt: "Patricia Ávalos, atención psicológica en Curicó",
+    titulo: "Psicología, hipnosis clínica y neuropsicología en Curicó",
+    descripcion: "Atención profesional, cercana y confidencial. Agenda tu evaluación psicológica en Curicó.",
+  },
 ];
 
 function normalizeWhatsAppNumber(phone) {
@@ -96,8 +102,8 @@ export default function Portada() {
       id: `portada-${item.id_publicacionesPortada ?? index}`,
       image: item.imagenPortada
         ? `${CF_BASE}/${item.imagenPortada}/portada`
-        : "/logoagendaclinica.png",
-      alt: item.tituloPortadaCarrusel || "Centro Médico",
+        : "/logo.png",
+      alt: item.tituloPortadaCarrusel || "Atención psicológica en Curicó",
       titulo: item.tituloPortadaCarrusel || "",
       descripcion: item.descripcionPublicacionesPortada || "",
     }));
@@ -169,7 +175,7 @@ export default function Portada() {
                 className="w-full h-full"
               >
                 <img
-                  src={imageErrors[currentSlide.id] ? "/logoagendaclinica.png" : currentSlide.image}
+                  src={imageErrors[currentSlide.id] ? "/logo.png" : currentSlide.image}
                   alt={currentSlide.alt}
                   className="w-full h-full object-cover"
                   draggable={false}
@@ -188,7 +194,7 @@ export default function Portada() {
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1.5">
               <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
               <span className="text-xs font-semibold tracking-widest text-slate-500 uppercase">
-                Agenda Clínica
+                Psicología en Curicó
               </span>
             </div>
 
@@ -203,7 +209,7 @@ export default function Portada() {
                 <div className="mb-5">
                   {/* Título viene del portadaEdit (tituloPortadaCarrusel) */}
                   <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 leading-tight mb-2">
-                    {currentSlide.titulo || "Tu Centro Médico"}
+                    {currentSlide.titulo || "Psicología, hipnosis clínica y neuropsicología en Curicó"}
                   </h1>
                 </div>
 
@@ -265,7 +271,7 @@ export default function Portada() {
                 className="w-full h-full"
               >
                 <img
-                  src={imageErrors[currentSlide.id] ? "/logoagendaclinica.png" : currentSlide.image}
+                  src={imageErrors[currentSlide.id] ? "/logo.png" : currentSlide.image}
                   alt={currentSlide.alt}
                   className="w-full h-full object-cover"
                   draggable={false}
@@ -282,7 +288,7 @@ export default function Portada() {
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1.5">
               <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
               <span className="text-xs font-semibold tracking-widest text-slate-500 uppercase">
-                Agenda Clínica
+                Psicología en Curicó
               </span>
             </div>
 
@@ -295,7 +301,7 @@ export default function Portada() {
                 transition={{ duration: 0.4, ease: "easeInOut" }}
               >
                 <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 mb-2">
-                  {currentSlide.titulo || "Tu Centro Médico"}
+                  {currentSlide.titulo || "Psicología, hipnosis clínica y neuropsicología en Curicó"}
                 </h1>
                 {(currentSlide.descripcion || sobreNosotros) && (
                   <p className="text-slate-600 text-sm leading-relaxed mb-6">

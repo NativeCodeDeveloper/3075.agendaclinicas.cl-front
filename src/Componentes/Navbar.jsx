@@ -42,7 +42,7 @@ export default function Navbar() {
           <div className="relative shrink-0 transition-transform duration-300 group-hover:scale-105">
             <Image
               src="/logo.png"
-              alt="Agenda Clínica"
+              alt="Patricia Ávalos Psicología en Curicó"
               width={160}
               height={50}
               priority

@@ -23,7 +23,7 @@ function extractIframeSrc(value) {
 }
 
 const initialContact = {
-  companyName: "Agenda Clinica",
+  companyName: "Patricia Ávalos Psicología",
   phone: "",
   whatsappNumber: "",
   whatsappUrl: "",
@@ -71,7 +71,7 @@ export default function Footer() {
       const email = datosEmpresa.contactoEmail || "";
 
       setPublicContact({
-        companyName: datosEmpresa.empresaNombre || "Agenda Clinica",
+        companyName: datosEmpresa.empresaNombre || "Patricia Ávalos Psicología",
         phone: datosEmpresa.contactoTelefono || "",
         whatsappNumber,
         whatsappUrl: whatsappNumber ? `https://wa.me/${normalizeWhatsAppNumber(whatsappNumber)}` : "",
@@ -118,7 +118,7 @@ export default function Footer() {
       {/* Background watermark */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center select-none z-0">
         <span className="text-[12vw] font-black leading-none text-white whitespace-nowrap opacity-[0.05]">
-          AGENDA CLÍNICA
+          PATRICIA ÁVALOS
         </span>
       </div>
 
@@ -131,7 +131,7 @@ export default function Footer() {
               <div className="transition-transform duration-300 group-hover:scale-205">
                 <Image
                   src="/logo.png"
-                  alt="Agenda Clínica"
+                  alt="Patricia Ávalos Psicología en Curicó"
                   width={180}
                   height={22}
                   className="h-35 w-auto object-contain"
@@ -140,7 +140,7 @@ export default function Footer() {
             </Link>
 
             <p className="text-slate-400 leading-relaxed max-w-xs mb-8 mt-4">
-              Agenda tu hora en línea de forma rápida y segura, en cualquier momento del día.
+              Atención en psicología clínica, hipnosis clínica y neuropsicología en Curicó. Agenda tu hora en línea.
             </p>
 
             {/* Trust badges */}

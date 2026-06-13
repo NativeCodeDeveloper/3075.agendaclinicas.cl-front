@@ -15,6 +15,11 @@ const michroma = Michroma({ weight: "400", subsets: ["latin"], display: "swap" }
 export const metadata = {
     title: "Dashboard — Agenda Clínica",
     description: "Panel de administración clínica",
+    robots: {
+        index: false,
+        follow: false,
+        nocache: true,
+    },
 };
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────

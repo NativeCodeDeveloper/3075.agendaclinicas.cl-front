@@ -2,6 +2,14 @@ import "./globals.css";
 import { AnimatedLayout } from "@/Componentes/AnimatedLayout";
 import AgendaProvider from "@/ContextosGlobales/AgendaContext";
 import { Inter, Outfit, Lora } from "next/font/google";
+import {
+  localSeoKeywords,
+  professionalName,
+  siteDescription,
+  siteName,
+  siteUrl,
+  socialImage,
+} from "@/lib/seo";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -22,32 +30,27 @@ const lora = Lora({
   style: ["normal", "italic"],
 });
 
-export const metadataBase = new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://agendaclinica.cl");
-const metadataImage = "/Copia%20de%20logoagendaclinica.png";
+export const metadataBase = new URL(siteUrl);
 
 export const metadata = {
+  metadataBase,
   title: {
-    default: "Agenda Clínica | Sistema de Agendamiento Médico Online",
-    template: "%s | Agenda Clínica",
+    default: "Psicología, Hipnosis y Neuropsicología en Curicó | Patricia Ávalos",
+    template: `%s | ${professionalName}`,
   },
-  description:
-    "Agenda tu hora médica de forma rápida y sencilla. Plataforma de agendamiento clínico online para profesionales de la salud. Reserva tu cita en segundos.",
-  keywords: [
-    "agenda clínica",
-    "agendar hora médica",
-    "reserva de hora online",
-    "citas médicas online",
-    "agendamiento clínico",
-    "agenda profesional salud",
-    "reservar cita médica",
-    "sistema de agendamiento",
-    "atención clínica",
-    "agenda online médica",
-    "hora médica online",
-    "plataforma salud",
-  ],
-  authors: [{ name: "Agenda Clínica", url: metadataBase.href }],
-  publisher: "Agenda Clínica",
+  description: siteDescription,
+  applicationName: siteName,
+  keywords: localSeoKeywords,
+  authors: [{ name: professionalName, url: metadataBase.href }],
+  creator: professionalName,
+  publisher: professionalName,
+  category: "Salud mental y psicología",
+  referrer: "origin-when-cross-origin",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   robots: {
     index: true,
     follow: true,
@@ -56,7 +59,10 @@ export const metadata = {
     "max-video-preview": -1,
   },
   alternates: {
-    canonical: metadataBase.href,
+    canonical: "/",
+    languages: {
+      "es-CL": "/",
+    },
   },
   icons: {
     icon: "/logofavcom.png",
@@ -64,33 +70,35 @@ export const metadata = {
     apple: "/logofavcom.png",
   },
   openGraph: {
-    title: "Agenda Clínica | Sistema de Agendamiento Médico Online",
-    description:
-      "Agenda tu hora médica de forma rápida y sencilla. Plataforma de agendamiento clínico online para profesionales de la salud.",
-    url: metadataBase.href,
-    siteName: "Agenda Clínica",
+    title: "Psicología, Hipnosis y Neuropsicología en Curicó",
+    description: siteDescription,
+    url: "/",
+    siteName,
     locale: "es_CL",
     type: "website",
     images: [
       {
-        url: metadataImage,
-        width: 1536,
-        height: 1024,
-        alt: "Agenda Clínica - Sistema de Agendamiento Médico Online",
+        url: socialImage,
+        width: 1200,
+        height: 630,
+        alt: "Patricia Ávalos - Psicología, hipnosis clínica y neuropsicología en Curicó",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Agenda Clínica | Agendamiento Médico Online",
-    description: "Reserva tu hora médica en segundos. Plataforma de agendamiento clínico online.",
-    images: [metadataImage],
+    title: "Psicología, Hipnosis y Neuropsicología en Curicó",
+    description: siteDescription,
+    images: [socialImage],
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
   },
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="es" className={`${inter.variable} ${outfit.variable} ${lora.variable}`}>
+    <html lang="es-CL" className={`${inter.variable} ${outfit.variable} ${lora.variable}`}>
       <body className="min-h-screen bg-white">
         {/*
           AgendaProvider DEBE envolver AnimatedLayout (no estar dentro).
