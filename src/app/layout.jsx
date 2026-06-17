@@ -5,6 +5,7 @@ import { Inter, Outfit, Lora } from "next/font/google";
 import {
   localSeoKeywords,
   professionalName,
+  tatianaName,
   siteDescription,
   siteName,
   siteUrl,
@@ -35,16 +36,19 @@ export const metadataBase = new URL(siteUrl);
 export const metadata = {
   metadataBase,
   title: {
-    default: "Psicología, Hipnosis y Neuropsicología en Curicó | Patricia Ávalos",
-    template: `%s | ${professionalName}`,
+    default: "Psicología, Hipnosis, Neuropsicología y Podología en Curicó | Patricia Ávalos · Tatiana Alegría",
+    template: `%s | ${siteName}`,
   },
   description: siteDescription,
   applicationName: siteName,
   keywords: localSeoKeywords,
-  authors: [{ name: professionalName, url: metadataBase.href }],
+  authors: [
+    { name: professionalName, url: metadataBase.href },
+    { name: tatianaName, url: metadataBase.href },
+  ],
   creator: professionalName,
   publisher: professionalName,
-  category: "Salud mental y psicología",
+  category: "Salud mental, psicología y podología",
   referrer: "origin-when-cross-origin",
   formatDetection: {
     email: false,
@@ -70,7 +74,7 @@ export const metadata = {
     apple: "/logofavcom.png",
   },
   openGraph: {
-    title: "Psicología, Hipnosis y Neuropsicología en Curicó",
+    title: "Psicología, Hipnosis, Neuropsicología y Podología en Curicó",
     description: siteDescription,
     url: "/",
     siteName,
@@ -81,13 +85,13 @@ export const metadata = {
         url: socialImage,
         width: 1200,
         height: 630,
-        alt: "Patricia Ávalos - Psicología, hipnosis clínica y neuropsicología en Curicó",
+        alt: "Patricia Ávalos y Tatiana Alegría — Psicología, hipnosis, neuropsicología y podología en Curicó",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Psicología, Hipnosis y Neuropsicología en Curicó",
+    title: "Psicología, Hipnosis, Neuropsicología y Podología en Curicó",
     description: siteDescription,
     images: [socialImage],
   },

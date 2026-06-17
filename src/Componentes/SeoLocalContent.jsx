@@ -4,25 +4,30 @@ const services = [
   {
     title: "Psicología clínica en Curicó",
     description:
-      "Evaluación y acompañamiento psicológico profesional para comprender lo que estás viviendo, desarrollar recursos y avanzar hacia un mayor bienestar emocional.",
+      "Patricia Merida Ávalos ofrece evaluación y psicoterapia clínica con atención Fonasa, Isapre y particular, presencial u online. Incluye terapia de parejas, familiar, de adicciones y más.",
   },
   {
-    title: "Hipnosis clínica en Curicó",
+    title: "Hipnosis y neuropsicología en Curicó",
     description:
-      "La hipnosis clínica se utiliza como una herramienta terapéutica complementaria dentro de un proceso psicológico responsable, personalizado y orientado a objetivos.",
+      "Hipnosis clínica, regresiones a vidas pasadas, evaluación y rehabilitación neuropsicológica, y evaluaciones infantiles y adolescentes con Patricia Ávalos en Curicó.",
   },
   {
-    title: "Neuropsicología en Curicó",
+    title: "Podología en Curicó",
     description:
-      "Evaluación de procesos cognitivos como atención, memoria, lenguaje y funciones ejecutivas para orientar necesidades de apoyo y próximos pasos.",
+      "Tatiana Alegría ofrece podología básica, tratamiento de helomas, hongos en uñas y uña encarnada. Atención profesional con agenda en línea.",
   },
 ];
 
 const faqs = [
   {
-    question: "¿Dónde encontrar atención psicológica en Curicó?",
+    question: "¿Dónde encontrar psicóloga con Fonasa en Curicó?",
     answer:
-      "Patricia Ávalos ofrece atención psicológica para personas que buscan evaluación, orientación y acompañamiento profesional en Curicó. Puedes revisar la disponibilidad y reservar en línea.",
+      "Patricia Merida Ávalos atiende con Fonasa, Isapre y particular en Curicó, tanto de forma presencial como online. Puedes revisar disponibilidad y reservar tu hora directamente en línea.",
+  },
+  {
+    question: "¿Qué terapias ofrece Patricia Ávalos en Curicó?",
+    answer:
+      "Psicoterapia individual, terapia de parejas, terapia familiar, terapia de adicciones, terapia para dejar de fumar, psicoterapia en disfunciones sexuales, hipnosis clínica, evaluación y rehabilitación neuropsicológica, y evaluaciones infantiles y adolescentes.",
   },
   {
     question: "¿Qué es la hipnosis clínica?",
@@ -33,6 +38,11 @@ const faqs = [
     question: "¿Para qué sirve una evaluación neuropsicológica?",
     answer:
       "Permite explorar el funcionamiento de capacidades cognitivas como memoria, atención, lenguaje y planificación, aportando información para orientar apoyos o derivaciones.",
+  },
+  {
+    question: "¿Dónde encontrar podóloga en Curicó?",
+    answer:
+      "Tatiana Alegría ofrece atención podológica en Curicó: podología básica, tratamiento de helomas, hongos en uñas y uña encarnada. Puedes agendar tu hora en línea.",
   },
 ];
 
@@ -72,9 +82,9 @@ export default function SeoLocalContent() {
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-indigo-600">
               Preguntas frecuentes
             </p>
-            <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900">
+            <h3 className="mt-4 text-3xl font-bold tracking-tight text-slate-900">
               Antes de reservar tu consulta
-            </h2>
+            </h3>
             <Link
               href="/agendaProfesionales"
               className="mt-7 inline-flex rounded-full bg-indigo-600 px-6 py-3 font-bold text-white transition hover:bg-indigo-700"

@@ -9,7 +9,7 @@ export default function sitemap() {
 
   return routes.map(({ path, ...entry }) => ({
     url: `${siteUrl}${path}`,
-    lastModified: new Date(),
+    lastModified: new Date("2025-06-17"),
     ...entry,
   }));
 }
