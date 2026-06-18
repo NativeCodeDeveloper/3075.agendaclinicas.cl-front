@@ -228,28 +228,7 @@ export default function FormularioReservaProfesional() {
         <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-slate-100 via-slate-50 to-slate-100 px-4 pb-12 pt-28 sm:px-6 sm:pb-16 sm:pt-32 lg:px-8">
             <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 bg-[radial-gradient(circle_at_center,rgba(14,165,233,0.10),transparent_65%)] lg:block"/>
 
-            <div className="relative mx-auto grid max-w-6xl items-start gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-14">
-                <aside className="sticky top-28 hidden overflow-hidden rounded-[2rem] border border-white/80 bg-white shadow-[0_30px_80px_-35px_rgba(15,23,42,0.35)] lg:block">
-                    <div className="relative min-h-[720px]">
-                        <Image
-                            src="/fondometa.webp"
-                            alt="Estetoscopio y documentación clínica"
-                            fill
-                            priority
-                            sizes="(min-width: 1024px) 38vw, 0px"
-                            className="object-cover object-center"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-slate-950/75"/>
-                        <div className="absolute inset-x-0 bottom-0 p-8 text-white">
-                            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-200">Reserva segura</p>
-                            <h2 className="mt-3 text-3xl font-semibold leading-tight">Tu atención comienza con una reserva simple y protegida.</h2>
-                            <p className="mt-3 max-w-sm text-sm leading-relaxed text-slate-200">
-                                Confirma tus datos, revisa el horario y continúa al pago seguro para completar la reserva.
-                            </p>
-                        </div>
-                    </div>
-                </aside>
-
+            <div className="relative mx-auto max-w-2xl">
                 <div className="mx-auto w-full max-w-2xl">
 
                 {/* ── Header ── */}
