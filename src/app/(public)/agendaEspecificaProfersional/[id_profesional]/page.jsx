@@ -433,7 +433,7 @@ export default function CalendarioMensualHoras() {
        RENDER
     ══════════════════════════════════════════ */
     return (
-        <div className="min-h-screen bg-gradient-to-b from-slate-100 via-slate-50 to-slate-100 px-4 pt-32 pb-16 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-gradient-to-b from-slate-100 via-slate-50 to-slate-100 px-4 pt-32 pb-24 sm:px-6 lg:px-8">
             <div className="mx-auto w-full max-w-3xl">
 
                 {/* ── Header ── */}
@@ -512,7 +512,7 @@ export default function CalendarioMensualHoras() {
 
                             {/* Lista desplegable */}
                             {dropdownServicios && (
-                                <div className="absolute z-20 mt-1 w-full rounded-xl border border-slate-200 bg-white shadow-lg shadow-slate-900/10 overflow-hidden">
+                                <div className="mt-2 max-h-[360px] w-full overflow-y-auto overscroll-contain rounded-xl border border-slate-200 bg-white shadow-lg shadow-slate-900/10">
                                     {listaServicios.map((tarifa, idx) => {
                                         const activo = servicioActivo?.id_tarifaProfesional === tarifa.id_tarifaProfesional;
                                         return (
@@ -521,18 +521,18 @@ export default function CalendarioMensualHoras() {
                                                 type="button"
                                                 onClick={() => seleccionarServicio(tarifa)}
                                                 className={
-                                                    "w-full flex items-center justify-between px-4 py-3 text-left transition hover:bg-slate-50 " +
+                                                    "w-full flex items-center justify-between gap-4 px-4 py-3 text-left transition hover:bg-slate-50 " +
                                                     (activo ? "bg-green-50" : "") +
                                                     (idx < listaServicios.length - 1 ? " border-b border-slate-100" : "")
                                                 }
                                             >
-                                                <div>
+                                                <div className="min-w-0">
                                                     <div className={"text-sm font-medium " + (activo ? "text-green-700" : "text-slate-800")}>
                                                         {tarifa.nombreServicio}
                                                     </div>
                                                     <div className="text-xs text-slate-500">{tarifa.duracion_min} min de atención</div>
                                                 </div>
-                                                <div className="flex items-center gap-3 ml-4 shrink-0">
+                                                <div className="flex shrink-0 items-center gap-3">
                                                     {Number(tarifa.precio) > 0 && (
                                                         <span className={"text-sm font-semibold " + (activo ? "text-green-700" : "text-slate-600")}>
                                                             ${Number(tarifa.precio).toLocaleString("es-CL")}

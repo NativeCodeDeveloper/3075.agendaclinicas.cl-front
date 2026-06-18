@@ -8,6 +8,7 @@ import {useParams, useRouter, useSearchParams} from "next/navigation";
 import {SelectDinamic} from "@/Componentes/SelectDinamic";
 import {RutInput} from "@/Componentes/RutInput";
 import {PhoneInput} from "@/Componentes/PhoneInput";
+import Image from "next/image";
 
 /* ─────────────────────────────────────────────
    FORMATO CLP
@@ -47,6 +48,7 @@ export default function FormularioReservaProfesional() {
     const [tarifaIndexFallback,   setTarifaIndexFallback]   = useState(""); // solo para el fallback
     const [servicioNombre,        setServicioNombre]        = useState("");
     const [totalPago,             setTotalPago]             = useState("");
+    const [procesandoPago,        setProcesandoPago]        = useState(false);
 
     /* ── Contexto global (fecha, hora y servicio vienen del calendario) ── */
     const {
@@ -134,41 +136,22 @@ export default function FormularioReservaProfesional() {
     ══════════════════════════════════════════ */
 
     /**
-     * Navega al comprobante de confirmación.
-     * La reserva ya fue guardada antes de llamar a esta función.
-     */
-    function irAlComprobante() {
-        setNombrePaciente(""); setApellidoPaciente(""); setRut("");
-        setTelefono(""); setEmail("");
-        // Pasa todos los datos relevantes al comprobante vía query params
-        const params = new URLSearchParams({
-            fecha:      fechaInicio,
-            hora:       horaInicio,
-            horaFin:    horaFin,
-            profesional: profesionalNombre,
-            servicio:   servicio?.nombre  || servicioNombre || "",
-            duracion:   String(servicio?.duracion_min || 60),
-            precio:     String(servicio?.precio || totalPago || ""),
-        });
-        router.push(`/reserva-hora?${params.toString()}`);
-    }
-
-    /**
-     * Guarda la reserva en el backend (sin pago).
+     * Crea la reserva pendiente de pago y redirige al checkout de Mercado Pago.
      * Validaciones:
      *  1. Debe haber fecha y hora (vienen del calendario).
      *  2. Todos los campos del paciente deben estar completos.
      */
-    async function agendarSinPago() {
+    async function pagarMercadoPago() {
         const motivoReserva = (servicio?.nombre || servicioNombre || "").trim();
-        const montoReserva = String(servicio?.precio ?? totalPago ?? "").trim();
+        const montoReserva = Number(servicio?.precio ?? totalPago);
 
         /* ── Validaciones de guard ── */
-        if (!fechaInicio || !horaInicio || !horaFin) {
+        if (procesandoPago) return;
+        if (!fechaInicio || !fechaFinalizacion || !horaInicio || !horaFin) {
             toast.error("Debes seleccionar fecha y hora antes de completar el formulario. Vuelve al calendario.");
             return;
         }
-        if (!motivoReserva || !montoReserva) {
+        if (!motivoReserva || !Number.isFinite(montoReserva) || montoReserva <= 0) {
             toast.error("Debes seleccionar un servicio antes de continuar.");
             return;
         }
@@ -177,14 +160,18 @@ export default function FormularioReservaProfesional() {
             return;
         }
 
+        setProcesandoPago(true);
+
         try {
-            const res = await fetch(`${API}/reservaPacientes/insertarReservaPacienteFicha`, {
+            const res = await fetch(`${API}/pagosMercadoPago/create-order`, {
                 method: "POST",
                 headers: {Accept: "application/json", "Content-Type": "application/json"},
                 body: JSON.stringify({
+                    tituloProducto:   `Reserva Consulta: ${motivoReserva} con ${profesionalNombre || "profesional"}`,
+                    precio:           montoReserva,
+                    cantidad:         1,
                     nombrePaciente:    nombrePaciente.trim(),
                     apellidoPaciente:  apellidoPaciente.trim(),
-                    nombreProfesional: profesionalNombre || "",
                     rut:               rut.trim(),
                     telefono:          telefono.trim(),
                     email:             email.trim(),
@@ -192,47 +179,78 @@ export default function FormularioReservaProfesional() {
                     horaInicio,
                     fechaFinalizacion,
                     horaFinalizacion:  horaFin,
-                    monto_reserva:     montoReserva,
-                    motivo_reserva:    motivoReserva,
                     estadoReserva:     "reservada",
+                    totalPago:         montoReserva,
                     id_profesional,
                 }),
+                mode: "cors",
             });
 
             let respuesta;
             try { respuesta = await res.json(); }
             catch { respuesta = null; }
 
-            // Conflicto de horario (otro paciente tomó el slot entre medias)
-            if (!res.ok && respuesta?.message === "conflicto") {
+            const mensajeError = String(respuesta?.message || respuesta?.error || "").toLowerCase();
+
+            // Otro paciente pudo tomar el horario mientras se completaba el formulario.
+            if (res.status === 409 || mensajeError.includes("conflicto") || mensajeError.includes("horario")) {
                 toast.error("Ese horario ya fue tomado. Vuelve al calendario y elige otro.");
+                setProcesandoPago(false);
                 return;
             }
             if (!res.ok) {
-                console.error("[Formulario] error backend:", res.status, respuesta);
-                toast.error(`No se pudo guardar la reserva (${res.status}). Intenta nuevamente.`);
+                console.error("[Formulario] error al crear pago:", res.status, respuesta);
+                toast.error(respuesta?.error || "No se pudo iniciar el pago. Intenta nuevamente o contáctanos por WhatsApp.");
+                setProcesandoPago(false);
                 return;
             }
-            if (respuesta?.message === true) {
-                toast.success("¡Cita agendada correctamente!");
-                irAlComprobante();
+
+            const checkoutUrl = respuesta?.init_point;
+            if (typeof checkoutUrl === "string" && checkoutUrl.startsWith("https://")) {
+                window.location.assign(checkoutUrl);
                 return;
             }
-            // Respuesta inesperada del backend
-            console.warn("[Formulario] respuesta inesperada:", respuesta);
-            toast.error("Respuesta inesperada del servidor. Intenta nuevamente.");
+
+            console.error("[Formulario] Mercado Pago no devolvió init_point:", respuesta);
+            toast.error("No se recibió el enlace de pago. Intenta nuevamente.");
+            setProcesandoPago(false);
         } catch (err) {
-            console.error("[Formulario] error de red:", err);
-            toast.error("Error de conexión. Intenta nuevamente o contáctanos por WhatsApp.");
+            console.error("[Formulario] error de red al crear pago:", err);
+            toast.error("No se pudo conectar con la pasarela de pago. Intenta nuevamente.");
+            setProcesandoPago(false);
         }
     }
 
     /* ══════════════════════════════════════════
-       RENDER
+    RENDER
     ══════════════════════════════════════════ */
     return (
-        <div className="min-h-screen bg-gradient-to-b from-slate-100 via-slate-50 to-slate-100 px-4 pt-28 pb-12 sm:pt-32 sm:pb-16 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl">
+        <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-slate-100 via-slate-50 to-slate-100 px-4 pb-12 pt-28 sm:px-6 sm:pb-16 sm:pt-32 lg:px-8">
+            <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 bg-[radial-gradient(circle_at_center,rgba(14,165,233,0.10),transparent_65%)] lg:block"/>
+
+            <div className="relative mx-auto grid max-w-6xl items-start gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-14">
+                <aside className="sticky top-28 hidden overflow-hidden rounded-[2rem] border border-white/80 bg-white shadow-[0_30px_80px_-35px_rgba(15,23,42,0.35)] lg:block">
+                    <div className="relative min-h-[720px]">
+                        <Image
+                            src="/fondometa.webp"
+                            alt="Estetoscopio y documentación clínica"
+                            fill
+                            priority
+                            sizes="(min-width: 1024px) 38vw, 0px"
+                            className="object-cover object-center"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-slate-950/75"/>
+                        <div className="absolute inset-x-0 bottom-0 p-8 text-white">
+                            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-200">Reserva segura</p>
+                            <h2 className="mt-3 text-3xl font-semibold leading-tight">Tu atención comienza con una reserva simple y protegida.</h2>
+                            <p className="mt-3 max-w-sm text-sm leading-relaxed text-slate-200">
+                                Confirma tus datos, revisa el horario y continúa al pago seguro para completar la reserva.
+                            </p>
+                        </div>
+                    </div>
+                </aside>
+
+                <div className="mx-auto w-full max-w-2xl">
 
                 {/* ── Header ── */}
                 <header className="animate-reveal-up mb-10 text-center">
@@ -391,15 +409,41 @@ export default function FormularioReservaProfesional() {
                     )}
 
                     {/* ── Botones ── */}
-                    <div className="flex flex-col-reverse gap-3 border-t border-slate-100 pt-6 sm:flex-row sm:justify-end">
-                        <ShadcnButton2 nombre="RETROCEDER" funcion={() => router.push(`/agendaEspecificaProfersional/${id_profesional}`)}/>
-                        <ShadcnButton2 nombre="FINALIZAR"  funcion={agendarSinPago}/>
+                    <div className="border-t border-slate-100 pt-6">
+                        <div className="mb-5 flex flex-col gap-3 rounded-xl border border-sky-100 bg-sky-50/70 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+                            <div>
+                                <p className="text-xs font-semibold text-slate-800">Pago procesado de forma segura</p>
+                                <p className="mt-0.5 text-[11px] leading-relaxed text-slate-500">Serás redirigido para elegir tu medio de pago.</p>
+                            </div>
+                            <Image
+                                src="/mercadopago.png"
+                                alt="Mercado Pago"
+                                width={150}
+                                height={61}
+                                sizes="150px"
+                                className="h-auto w-[132px] shrink-0 object-contain"
+                            />
+                        </div>
+
+                        <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                            <ShadcnButton2
+                                nombre="RETROCEDER"
+                                funcion={() => router.push(`/agendaEspecificaProfersional/${id_profesional}`)}
+                                disabled={procesandoPago}
+                            />
+                            <ShadcnButton2
+                                nombre={procesandoPago ? "REDIRIGIENDO AL PAGO..." : "PAGAR Y RESERVAR"}
+                                funcion={pagarMercadoPago}
+                                disabled={procesandoPago}
+                            />
+                        </div>
                     </div>
                 </form>
 
                 <p className="mt-6 text-center text-xs text-slate-400">
                     Revisa que los datos sean correctos antes de confirmar tu reserva.
                 </p>
+                </div>
             </div>
         </div>
     );
